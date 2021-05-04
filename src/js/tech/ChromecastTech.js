@@ -54,10 +54,9 @@ ChromecastTech = {
       this._onChangeSubtitleTrack = options.onChangeSubtitleTrackFn || function() { /* noop */ };
       this._requestTitle = options.requestTitleFn || function() { /* noop */ };
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
-      this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
       this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
-
+      this._modifyLoadRequestFn = options.modifyLoadRequestFn || function() { /* noop */ };
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
       };
@@ -302,6 +301,7 @@ ChromecastTech = {
 
          request = { ...request, ...credentialsData };
       }
+      request = this._modifyLoadRequestFn(request);
 
       this._isMediaLoading = true;
       this._hasPlayedCurrentItem = false;
