@@ -1,10 +1,5 @@
 # Silvermine VideoJS Chromecast Plugin
 
-[![Build Status](https://travis-ci.org/silvermine/videojs-chromecast.svg?branch=master)](https://travis-ci.org/silvermine/videojs-chromecast)
-[![Coverage Status](https://coveralls.io/repos/github/silvermine/videojs-chromecast/badge.svg?branch=master)](https://coveralls.io/github/silvermine/videojs-chromecast?branch=master)
-[![Dependency Status](https://david-dm.org/silvermine/videojs-chromecast.svg)](https://david-dm.org/silvermine/videojs-chromecast)
-[![Dev Dependency Status](https://david-dm.org/silvermine/videojs-chromecast/dev-status.svg)](https://david-dm.org/silvermine/videojs-chromecast#info=devDependencies&view=table)
-
 
 ## What is it?
 
@@ -14,7 +9,7 @@ bar which will cast videos to a Chromecast.
 
 ## How do I use it?
 
-The `@silvermine/videojs-chromecast` plugin includes 3 types of assets: javascript, CSS,
+The `@standardbroadcast/videojs-chromecast` plugin includes 3 types of assets: javascript, CSS,
 and images.
 
 You can either build the plugin locally and use the assets that are output from the build
@@ -33,9 +28,9 @@ module, the Chromecast framework will need to be included after the plugin. For 
 
 ### Building the plugin locally
 
-   1. Either clone this repository or install the `@silvermine/videojs-chromecast` module
-      using `npm install @silvermine/videojs-chromecast`.
-   2. Ensure that `@silvermine/videojs-chromecast`'s `devDependencies` are installed by
+   1. Either clone this repository or install the `@standardbroadcast/videojs-chromecast` module
+      using `npm install @standardbroadcast/videojs-chromecast`.
+   2. Ensure that `@standardbroadcast/videojs-chromecast`'s `devDependencies` are installed by
       running `npm install` from within the `videojs-chromecast` folder.
    3. Run `grunt build` to build and copy the javascript, CSS and image files to the
       `videojs-chromecast/dist` folder.
@@ -85,7 +80,7 @@ If requiring this plugin via NPM, any desired initialization options can be supp
 the constructor function exported by the module. For example:
 
 ```js
-require('@silvermine/videojs-chromecast')(videojs, { preloadWebComponents: true });
+require('@standardbroadcast/videojs-chromecast')(videojs, { preloadWebComponents: true });
 ```
 
 #### Providing initialization options via `<script>`
@@ -242,9 +237,9 @@ to the map of translation strings.
 ### Using the npm module
 
 If you are using a module loader such as Browserify or Webpack, first install
-`@silvermine/videojs-chromecast` using `npm install`. Then, use
-`require('@silvermine/videojs-chromecast')` to require `@silvermine/videojs-chromecast`
-into your project's source code. `require('@silvermine/videojs-chromecast')` returns a
+`@standardbroadcast/videojs-chromecast` using `npm install`. Then, use
+`require('@standardbroadcast/videojs-chromecast')` to require `@standardbroadcast/videojs-chromecast`
+into your project's source code. `require('@standardbroadcast/videojs-chromecast')` returns a
 function that you can use to register the plugin with videojs by passing in a reference to
 `videojs`:
 
@@ -252,7 +247,7 @@ function that you can use to register the plugin with videojs by passing in a re
 var videojs = require('video.js');
 
 // Initialize the Chromecast plugin
-require('@silvermine/videojs-chromecast')(videojs);
+require('standardbroadcast/videojs-chromecast')(videojs);
 ```
 
 Then, follow the steps in the "Configuration" section above.
@@ -263,7 +258,7 @@ If you are using SCSS in your project, you can simply reference the plugin's mai
 file in your project's SCSS:
 
 ```scss
-@import "path/to/node_modules/@silvermine/videojs-chromecast/src/scss/videojs-chromecast";
+@import "path/to/node_modules/@standardbroadcast/videojs-chromecast/src/scss/videojs-chromecast";
 ```
 
 Optionally, you can override the SCSS variables that contain the paths to the icon
