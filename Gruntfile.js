@@ -5,7 +5,6 @@
 'use strict';
 
 var path = require('path'),
-    getCodeVersion = require('silvermine-serverless-utils/src/get-code-version'),
     join = path.join.bind(path),
     nodeSass = require('sass');
 
@@ -49,7 +48,6 @@ module.exports = function(grunt) {
    grunt.initConfig({
 
       pkg: grunt.file.readJSON('package.json'),
-      versionInfo: getCodeVersion.both(),
       config: config,
 
       clean: {
@@ -102,7 +100,7 @@ module.exports = function(grunt) {
                '<%= config.dist.js.minified %>': config.dist.js.bundle,
             },
             options: {
-               banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> <%= versionInfo %> */\n',
+               banner: '/*! <%= pkg.name %> <%= pkg.version %> */\n',
                sourceMap: DEBUG,
                sourceMapIncludeSources: DEBUG,
                mangle: DEBUG,
