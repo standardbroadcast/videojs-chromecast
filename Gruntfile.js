@@ -34,13 +34,13 @@ module.exports = function(grunt) {
    };
 
    config.dist.js = {
-      bundle: join(config.dist.base, 'silvermine-videojs-chromecast.js'),
-      minified: join(config.dist.base, 'silvermine-videojs-chromecast.min.js'),
+      bundle: join(config.dist.base, 'videojs-chromecast.js'),
+      minified: join(config.dist.base, 'videojs-chromecast.min.js'),
    };
 
    config.dist.css = {
       base: config.dist.base,
-      main: join(config.dist.base, 'silvermine-videojs-chromecast.css'),
+      main: join(config.dist.base, 'videojs-chromecast.css'),
    };
 
    config.dist.images = join(config.dist.base, 'images');

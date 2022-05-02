@@ -22,7 +22,7 @@ module, the Chromecast framework will need to be included after the plugin. For 
 
 ```html
 <script src="https://unpkg.com/video.js@6.1.0/dist/video.js"></script>
-<script src="./dist/silvermine-videojs-chromecast.min.js"></script>
+<script src="./dist/videojs-chromecast.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 ```
 
@@ -37,12 +37,12 @@ module, the Chromecast framework will need to be included after the plugin. For 
    4. Copy the plugin's files from the `dist` folder into your project as needed.
    5. Ensure that the images in the `dist/images` folder are accessible at `./images/`,
       relative to where the plugin's CSS is located. If, for example, your CSS is located
-      at `https://example.com/plugins/silvermine-videojs-chromecast.css`, then the
+      at `https://example.com/plugins/videojs-chromecast.css`, then the
       plugin's images should be located at `https://example.com/plugins/images/`.
    6. Follow the steps in the "Configuration" section below.
 
 Note: when adding the plugin's javascript to your web page, include the
-`silvermine-videojs-chromecast.min.js` javascript file in your HTML *after* loading
+`videojs-chromecast.min.js` javascript file in your HTML *after* loading
 Video.js. The plugin's built javascript file expects there to be a reference to Video.js
 at `window.videojs` and will throw an error if it does not exist.
 
@@ -95,7 +95,7 @@ before the `<script>` tag to include the plugin.
       preloadWebComponents: true,
    };
 </script>
-<script src="path/to/silvermine-videojs-chromecast.js"></script>
+<script src="path/to/videojs-chromecast.js"></script>
 ```
 
 ### Configuration
@@ -296,7 +296,7 @@ The plugin's images are located at `videojs-chromecast/src/images`. If you have
 not overridden the icon image path variables in the SCSS, then copy the images from the
 `src/images` folder to a folder that is accessible at `./images/`, relative to where the
 plugin's CSS is located. If, for example, your CSS is located at
-`https://example.com/plugins/silvermine-videojs-chromecast.css`, then the plugin's images
+`https://example.com/plugins/videojs-chromecast.css`, then the plugin's images
 should be located at `https://example.com/plugins/images/`.
 
 In addition, the `ic_cast_white_24dp.png` icon image that is used as the default icon for
