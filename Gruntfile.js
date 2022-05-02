@@ -7,7 +7,7 @@
 var path = require('path'),
     getCodeVersion = require('silvermine-serverless-utils/src/get-code-version'),
     join = path.join.bind(path),
-    nodeSass = require('node-sass');
+    nodeSass = require('sass');
 
 module.exports = function(grunt) {
 
