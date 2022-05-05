@@ -200,7 +200,8 @@ ChromecastTech = {
           noop = function() { /* noop */ },
           index, subtitles, tracksInfoRequest, i;
 
-      if (castSession) {
+      // TODO: investigate the case when we're trying to change track while there's no `media` (yet?)
+      if (castSession && media) {
          index = [];
          subtitles = this.videojsPlayer.remoteTextTracks();
          for (i = 0; i < subtitles.length; i++) {
