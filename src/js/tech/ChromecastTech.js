@@ -659,6 +659,8 @@ ChromecastTech = {
       }
       clearTimeout(this.playStateValidationTimeout);
       this._removeAllEventListeners();
+      // even with `stopCasting === false`, `endCurrentSession` *stops* casting
+      // this._getCastContext().endCurrentSession(/* stopCasting */ false);
    },
 
    /**
