@@ -41,6 +41,7 @@ class ChromecastSessionManager {
       this.player.on('dispose', this._removeCastContextEventListeners.bind(this));
 
       this._notifyPlayerOfDevicesAvailabilityChange(this.getCastContext().getCastState());
+      this._sessionListener({sessionState: this.getCastContext().getSessionState()})
 
       this.remotePlayer = new cast.framework.RemotePlayer();
       this.remotePlayerController = new cast.framework.RemotePlayerController(this.remotePlayer);
