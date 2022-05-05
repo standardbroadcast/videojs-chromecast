@@ -60,8 +60,10 @@ ChromecastTech = {
       // See `currentTime` function
       this._initialStartTime = options.startTime || 0;
 
+      const loadSource = this._requestLoadSource(options.source);
+
       mediaSession = this._getMediaSession();
-      if (mediaSession && mediaSession.media && mediaSession.media.contentId === options.source.id) {
+      if (mediaSession && mediaSession.media && mediaSession.media.contentId === loadSource.id) {
          this.onLoadSessionSuccess();
       } else {
          this._playSource(options.source, this._initialStartTime);
@@ -231,9 +233,9 @@ ChromecastTech = {
           request,
           i;
 
-      mediaInfo.contentId = source.id;
-      mediaInfo.contentUrl = source.src;
-      mediaInfo.contentType = source.type;
+      mediaInfo.contentId = loadSource.id;
+      mediaInfo.contentUrl = loadSource.src;
+      mediaInfo.contentType = loadSource.type;
 
       this.trigger('waiting');
       this._clearSessionTimeout();
