@@ -166,6 +166,8 @@ function waitUntilChromecastAPIsAreAvailable(player, options) {
  *          return {
  *             src: mpegDashStreams[source.src],
  *             type: 'application/dash+xml',
+ *             id: ids[source.src],
+ *             startTime: startTimes[source.src],
  *          };
  *       },
  *    }
