@@ -103,7 +103,7 @@ ChromecastTech = {
       if (!this.paused()) {
          return;
       }
-      if (this.ended() && !this._isMediaLoading) {
+      if (this.ended()) {
          // Restart the current item from the beginning
          this._playSource(this.videojsPlayer.currentSource(), 0);
       } else {
@@ -386,7 +386,7 @@ ChromecastTech = {
    ended: function() {
       var mediaSession = this._getMediaSession();
 
-      if (!mediaSession && this._hasMediaSessionEnded) {
+      if (!mediaSession && this._hasMediaSessionEnded && !this._isMediaLoading) {
          return true;
       }
 
