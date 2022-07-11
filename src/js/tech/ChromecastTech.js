@@ -238,6 +238,11 @@ ChromecastTech = {
       mediaInfo.contentUrl = loadSource.src;
       mediaInfo.contentType = loadSource.type;
 
+      if (loadSource.credentials) {
+         mediaInfo.credentials = loadSource.credentials;
+         mediaInfo.credentialsType = loadSource.credentialsType;
+      }
+
       this.trigger('waiting');
       this._clearSessionTimeout();
 
