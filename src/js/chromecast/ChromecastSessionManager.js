@@ -41,11 +41,14 @@ class ChromecastSessionManager {
       this.player.on('dispose', this._removeCastContextEventListeners.bind(this));
 
       this._notifyPlayerOfDevicesAvailabilityChange(this.getCastContext().getCastState());
-      this._sessionListener({sessionState: this.getCastContext().getSessionState()})
+      this._sessionListener({ sessionState: this.getCastContext().getSessionState() });
 
-      // same `RemotePlayer` instance has to be reused when reinitiating `ChromecastSessionManager`
-      ChromecastSessionManager.remotePlayer = ChromecastSessionManager.remotePlayer || new cast.framework.RemotePlayer();
-      ChromecastSessionManager.remotePlayerController = ChromecastSessionManager.remotePlayerController || new cast.framework.RemotePlayerController(ChromecastSessionManager.remotePlayer);
+      // same `RemotePlayer` has to be reused when reinitiating `ChromecastSessionManager`
+      ChromecastSessionManager.remotePlayer = ChromecastSessionManager.remotePlayer
+         || new cast.framework.RemotePlayer();
+
+      ChromecastSessionManager.remotePlayerController = ChromecastSessionManager.remotePlayerController
+         || new cast.framework.RemotePlayerController(ChromecastSessionManager.remotePlayer);
    }
 
    static remotePlayer;
