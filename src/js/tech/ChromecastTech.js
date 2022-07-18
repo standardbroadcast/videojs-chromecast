@@ -63,7 +63,7 @@ ChromecastTech = {
       const loadSource = this._requestLoadSource(options.source);
 
       mediaSession = this._getMediaSession();
-      if (mediaSession && mediaSession.media && mediaSession.media.contentId === loadSource.id) {
+      if (mediaSession && mediaSession.media && mediaSession.media.entity === loadSource.entity) {
          this.onLoadSessionSuccess();
       } else {
          this._playSource(options.source, this._initialStartTime);
@@ -234,7 +234,7 @@ ChromecastTech = {
           request,
           i;
 
-      mediaInfo.contentId = loadSource.id;
+      mediaInfo.entity = loadSource.entity;
       mediaInfo.contentUrl = loadSource.src;
       mediaInfo.contentType = loadSource.type;
 

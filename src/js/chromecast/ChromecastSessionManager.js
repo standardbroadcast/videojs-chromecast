@@ -101,7 +101,7 @@ class ChromecastSessionManager {
    _reloadTechWithSources(mediaStatus) {
       var currentTime = mediaStatus.currentTime,
           isPlaying = mediaStatus.playerState === 'PLAYING',
-          sources = [ { id: mediaStatus.media.contentId, src: mediaStatus.media.contentUrl, type: mediaStatus.media.contentType } ];
+          sources = [ { entity: mediaStatus.media.entity, src: mediaStatus.media.contentUrl, type: mediaStatus.media.contentType } ];
 
       this._reloadTech(currentTime, isPlaying, sources);
    }
