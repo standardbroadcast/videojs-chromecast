@@ -238,11 +238,6 @@ ChromecastTech = {
       mediaInfo.contentUrl = loadSource.src;
       mediaInfo.contentType = loadSource.type;
 
-      if (loadSource.credentials) {
-         mediaInfo.credentials = loadSource.credentials;
-         mediaInfo.credentialsType = loadSource.credentialsType;
-      }
-
       this.trigger('waiting');
       this._clearSessionTimeout();
 
@@ -273,6 +268,11 @@ ChromecastTech = {
       request = new chrome.cast.media.LoadRequest(mediaInfo);
       request.autoplay = true;
       request.currentTime = loadSource.startTime || startTime;
+
+      if (loadSource.credentials) {
+         request.credentials = loadSource.credentials;
+         request.credentialsType = loadSource.credentialsType;
+      }
 
       this._isMediaLoading = true;
       this._hasPlayedCurrentItem = false;
