@@ -121,7 +121,7 @@ class ChromecastSessionManager {
       ChromecastSessionManager.hasConnected = true;
       this.player.trigger('chromecastConnected');
 
-      if (mediaStatus) {
+      if (mediaStatus && mediaStatus.media) {
          this._reloadTechWithSources(mediaStatus);
       } else {
          this._reloadTech();
