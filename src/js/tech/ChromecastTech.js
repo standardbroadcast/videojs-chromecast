@@ -142,7 +142,9 @@ ChromecastTech = {
     * @see {@link http://docs.videojs.com/Player.html#src}
     */
    setSource: function(source) {
-      if (this._currentSource && this._currentSource.src === source.src && this._currentSource.type === source.type) {
+      const mediaSession = this._getMediaSession();
+
+      if (source.entity && mediaSession && mediaSession.media && mediaSession.media.entity === source.entity) {
          // Skip setting the source if the `source` argument is the same as what's already
          // been set. This `setSource` function calls `this._playSource` which sends a
          // "load media" request to the Chromecast PlayerController. Because this function
@@ -152,11 +154,6 @@ ChromecastTech = {
          // media" requests, which it itself does not de-duplicate.
          return;
       }
-      // We cannot use `this.videojsPlayer.currentSource()` because the value returned by
-      // that function is not the same as what's returned by the Video.js Player's
-      // middleware after they are run. Also, simply using `this.videojsPlayer.src()`
-      // does not include mimetype information which we pass to the Chromecast player.
-      this._currentSource = source;
       this._playSource(source, 0);
    },
 
