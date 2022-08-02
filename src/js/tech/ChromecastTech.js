@@ -57,16 +57,16 @@ ChromecastTech = {
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
       };
-      // See `currentTime` function
-      this._initialStartTime = options.startTime || 0;
-
       const loadSource = this._requestLoadSource(options.source);
+
+      // See `currentTime` function
+      this._initialStartTime = options.startTime === undefined ? (loadSource.startTime || 0) : options.startTime;
 
       mediaSession = this._getMediaSession();
       if (mediaSession && mediaSession.media && mediaSession.media.entity === loadSource.entity) {
          this.onLoadSessionSuccess();
       } else {
-         this._playSource(options.source, this._initialStartTime);
+         this._playSource(options.source);
       }
 
       this.ready(function() {
@@ -154,7 +154,8 @@ ChromecastTech = {
          // media" requests, which it itself does not de-duplicate.
          return;
       }
-      this._playSource(source, 0);
+
+      this._playSource(source);
    },
 
    /**
@@ -264,7 +265,7 @@ ChromecastTech = {
 
       request = new chrome.cast.media.LoadRequest(mediaInfo);
       request.autoplay = true;
-      request.currentTime = loadSource.startTime || startTime;
+      request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
 
       if (loadSource.credentials) {
          request.credentials = loadSource.credentials;
