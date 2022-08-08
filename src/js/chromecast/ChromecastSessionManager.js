@@ -103,10 +103,9 @@ class ChromecastSessionManager {
     */
    _reloadTechWithSources(mediaStatus) {
       var currentTime = mediaStatus.currentTime,
-          isPlaying = mediaStatus.playerState === 'PLAYING',
-          sources = [ { entity: mediaStatus.media.entity, src: mediaStatus.media.contentUrl, type: mediaStatus.media.contentType } ];
+          isPlaying = mediaStatus.playerState === 'PLAYING';
 
-      this._reloadTech(currentTime, isPlaying, sources);
+      this._reloadTech(currentTime, isPlaying);
    }
 
    /**
@@ -122,7 +121,7 @@ class ChromecastSessionManager {
       ChromecastSessionManager.hasConnected = true;
       this.player.trigger('chromecastConnected');
 
-      if (mediaStatus) {
+      if (mediaStatus && mediaStatus.media) {
          this._reloadTechWithSources(mediaStatus);
       } else {
          this._reloadTech();
@@ -205,11 +204,11 @@ class ChromecastSessionManager {
     *
     * @private
     */
-   _reloadTech(sessionCurrentTime, sessionPlaying, sessionSources) {
+   _reloadTech(sessionCurrentTime, sessionPlaying) {
       var player = this.player,
           currentTime = sessionCurrentTime || player.currentTime(),
           wasPlaying = sessionPlaying || !player.paused(),
-          sources = sessionSources || player.currentSources();
+          sources = player.currentSources();
 
       // Reload the current source(s) to re-lookup and use the currently available Tech.
       // The chromecast Tech gets used if `ChromecastSessionManager.isChromecastConnected`
