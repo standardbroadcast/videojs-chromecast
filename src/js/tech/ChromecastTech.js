@@ -54,7 +54,7 @@ ChromecastTech = {
       this._requestTitle = options.requestTitleFn || function() { /* noop */ };
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
-      this._requestTrackChange = options.requestTrackChangeFn || function() { /* noop */ };
+      this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
 
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
@@ -668,7 +668,7 @@ ChromecastTech = {
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, this._requestTrackChange, this);
+      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, this._handleMediaInfoChangeEvent, this);
    },
 
    /**
@@ -890,6 +890,13 @@ ChromecastTech = {
     */
    _triggerDurationChangeEvent: function() {
       this.trigger('durationchange');
+   },
+
+   /**
+    * @private
+    */
+   _handleMediaInfoChangeEvent: function(event) {
+      this._requestQueueItemChange(event);
    },
 
    /**
