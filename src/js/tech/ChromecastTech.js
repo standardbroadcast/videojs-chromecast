@@ -439,12 +439,10 @@ ChromecastTech = {
          return false;
       }
       if (!mediaSession && this._hasMediaSessionEnded && !this._isMediaLoading) {
-
          return true;
       }
       return mediaSession ? (mediaSession.idleReason === chrome.cast.media.IdleReason.FINISHED) : false;
    },
-
 
    /**
     * Returns the current volume level setting as a decimal number between `0` and `1`.
@@ -670,7 +668,7 @@ ChromecastTech = {
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, this._triggerMediaInfoChangeEvent, this);
+      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, this._requestTrackChange, this);
    },
 
    /**
@@ -893,17 +891,6 @@ ChromecastTech = {
    _triggerDurationChangeEvent: function() {
       this.trigger('durationchange');
    },
-
-   /**
-    * Triggers a 'durationchange' event
-    * @private
-    * @see http://docs.videojs.com/Player.html#event:durationchange
-    */
-   _triggerMediaInfoChangeEvent: function(event) {
-
-      this._requestTrackChange(event);
-   },
-
 
    /**
     * Triggers an 'error' event
