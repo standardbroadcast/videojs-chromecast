@@ -258,13 +258,6 @@ ChromecastTech = {
             mediaInfoItem.tracks = [];
             mediaInfoItem.activeTrackIds = [];
 
-            // TODO: FIX TRACKS
-            // for (i = 0; i < textTrackJsonTracks.length; i++) {
-            //    mediaInfoItem.tracks.push(this.generateTrack(textTrackJsonTracks[i], i));
-            //    if (textTrackJsonTracks[i].mode === 'showing') {
-            //       mediaInfo.activeTrackIds.push(i);
-            //    }
-            // }
             return new chrome.cast.media.QueueItem(mediaInfoItem);
          });
 
@@ -439,7 +432,9 @@ ChromecastTech = {
    ended: function() {
       var mediaSession = this._getMediaSession();
 
-      // Don't check for queues there is a seperate check if queue has finished
+      // Don't check for queues
+      // When handling a queue there are moments when mediaSession is null and current item has already finished
+      // and the new item is not started loading yet, which would end the session.
       if (this._queue) {
          return false;
       }
