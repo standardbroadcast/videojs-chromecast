@@ -290,8 +290,7 @@ ChromecastTech = {
             mediaInfo.customData = customData;
          }
 
-         this._ui.updateTitle(title);
-         this._ui.updateSubtitle(subtitle);
+
          request = new chrome.cast.media.LoadRequest(mediaInfo);
       }
 
@@ -303,6 +302,8 @@ ChromecastTech = {
       }
       this._isMediaLoading = true;
       this._hasPlayedCurrentItem = false;
+      this._ui.updateTitle(title);
+      this._ui.updateSubtitle(subtitle);
       castSessionObj = castSession.getSessionObj();
       castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
