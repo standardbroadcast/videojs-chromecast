@@ -257,28 +257,12 @@ ChromecastTech = {
                : chrome.cast.media.StreamType.BUFFERED;
             mediaInfoItem.tracks = [];
             mediaInfoItem.activeTrackIds = [];
-
             return new chrome.cast.media.QueueItem(mediaInfoItem);
          });
 
          request = new chrome.cast.media.LoadRequest();
-
-         request.autoplay = true;
          request.startIndex = loadSource.startIndex;
-         request.currentTime = loadSource.startTime;
-
-         if (loadSource.credentials) {
-            request.credentials = loadSource.credentials;
-            request.credentialsType = loadSource.credentialsType;
-         }
-
-         this._isMediaLoading = true;
-         this._hasPlayedCurrentItem = false;
-         castSessionObj = castSession.getSessionObj();
          request.queueData = new chrome.cast.media.QueueData(undefined, undefined, undefined, undefined, queueMediaInfo, loadSource.startIndex, loadSource.startTime);
-         castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
-
-
       } else {
          this._queue = null;
          mediaInfo.entity = loadSource.entity;
@@ -309,19 +293,18 @@ ChromecastTech = {
          this._ui.updateTitle(title);
          this._ui.updateSubtitle(subtitle);
          request = new chrome.cast.media.LoadRequest(mediaInfo);
-         request.autoplay = true;
-         request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
-
-         if (loadSource.credentials) {
-            request.credentials = loadSource.credentials;
-            request.credentialsType = loadSource.credentialsType;
-         }
-
-         this._isMediaLoading = true;
-
-         castSession.loadMedia(request)
-            .then(this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
       }
+
+      request.autoplay = true;
+      request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
+      if (loadSource.credentials) {
+         request.credentials = loadSource.credentials;
+         request.credentialsType = loadSource.credentialsType;
+      }
+      this._isMediaLoading = true;
+      this._hasPlayedCurrentItem = false;
+      castSessionObj = castSession.getSessionObj();
+      castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
 
    /**
