@@ -261,7 +261,8 @@ ChromecastTech = {
             return new chrome.cast.media.QueueItem(mediaInfoItem);
          });
 
-         request = new chrome.cast.media.QueueLoadRequest(queueMediaInfo);
+         request = new chrome.cast.media.LoadRequest();
+
          request.autoplay = true;
          request.startIndex = loadSource.startIndex;
          request.currentTime = loadSource.startTime;
@@ -274,8 +275,10 @@ ChromecastTech = {
          this._isMediaLoading = true;
          this._hasPlayedCurrentItem = false;
          castSessionObj = castSession.getSessionObj();
+         request.queueData = new chrome.cast.media.QueueData(undefined, undefined, undefined, undefined, queueMediaInfo, loadSource.startIndex, loadSource.startTime);
+         castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
 
-         castSessionObj.queueLoad(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
+
       } else {
          this._queue = null;
          mediaInfo.entity = loadSource.entity;
