@@ -619,6 +619,28 @@ ChromecastTech = {
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
+      // If any subtitles were loaded on cast recier side,
+      // check if they exist on web player side, if not add them
+      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, (event) => {
+         this.videojsPlayer.remoteTextTracks();
+         const alreadyLoadedTracks = this.videojsPlayer.remoteTextTracks().tracks_;
+
+         const player = this.videojsPlayer;
+
+         if (event.value && event.value.tracks) {
+            event.value.tracks.forEach(function(track) {
+               const isAlreadyLoaded = !!alreadyLoadedTracks.find(function(alreadyLoadedTrack) {
+                  return alreadyLoadedTrack.id === track.name;
+               });
+
+               if (!isAlreadyLoaded) {
+                  track.id = track.name;
+                  player.addRemoteTextTrack(track);
+               }
+            });
+         }
+
+      });
    },
 
    /**
