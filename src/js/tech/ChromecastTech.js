@@ -289,8 +289,6 @@ ChromecastTech = {
          if (customData) {
             mediaInfo.customData = customData;
          }
-
-
          request = new chrome.cast.media.LoadRequest(mediaInfo);
       }
 
