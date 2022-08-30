@@ -54,6 +54,8 @@ ChromecastTech = {
       this._requestTitle = options.requestTitleFn || function() { /* noop */ };
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
+      this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
+
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
       };
@@ -222,6 +224,7 @@ ChromecastTech = {
     * @see {@link http://docs.videojs.com/Player.html#src}
     */
    _playSource: function(source, startTime) {
+
       var castSession = this._getCastSession(),
           loadSource = this._requestLoadSource(source),
           mediaInfo = new chrome.cast.media.MediaInfo(loadSource.src, loadSource.type),
@@ -230,52 +233,77 @@ ChromecastTech = {
           customData = this._requestCustomData(source),
           textTrackJsonTracks = this.videojsPlayer.textTracksJson_,
           request,
+          castSessionObj,
           i;
-
-      mediaInfo.entity = loadSource.entity;
-      mediaInfo.contentUrl = loadSource.src;
-      mediaInfo.contentType = loadSource.type;
 
       this.trigger('waiting');
       this._clearSessionTimeout();
 
-      mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-      mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-      mediaInfo.metadata.title = title;
-      mediaInfo.metadata.subtitle = subtitle;
-      mediaInfo.streamType = this.videojsPlayer.liveTracker && this.videojsPlayer.liveTracker.isLive()
-         ? chrome.cast.media.StreamType.LIVE
-         : chrome.cast.media.StreamType.BUFFERED;
-      mediaInfo.tracks = [];
-      mediaInfo.activeTrackIds = [];
+      // if more then one source was load, load queue
+      if (loadSource.sources) {
+         this._queue = loadSource.sources;
+         const queueMediaInfo = loadSource.sources.map((queueItem) => {
+            const mediaInfoItem = new chrome.cast.media.MediaInfo(queueItem.src, queueItem.type);
 
-      for (i = 0; i < textTrackJsonTracks.length; i++) {
-         mediaInfo.tracks.push(this.generateTrack(textTrackJsonTracks[i], i));
-         if (textTrackJsonTracks[i].mode === 'showing') {
-            mediaInfo.activeTrackIds.push(i);
+            mediaInfoItem.entity = queueItem.entity;
+
+            mediaInfoItem.contentUrl = queueItem.src;
+            mediaInfoItem.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfoItem.metadata.title = queueItem.title;
+            mediaInfoItem.duration = queueItem.duration;
+            mediaInfoItem.metadata.subtitle = queueItem.subtitle;
+            mediaInfoItem.streamType = this.videojsPlayer.liveTracker && this.videojsPlayer.liveTracker.isLive()
+               ? chrome.cast.media.StreamType.LIVE
+               : chrome.cast.media.StreamType.BUFFERED;
+            mediaInfoItem.tracks = [];
+            mediaInfoItem.activeTrackIds = [];
+            return new chrome.cast.media.QueueItem(mediaInfoItem);
+         });
+
+         request = new chrome.cast.media.LoadRequest();
+         request.startIndex = loadSource.startIndex;
+         request.queueData = new chrome.cast.media.QueueData(undefined, undefined, undefined, undefined, queueMediaInfo, loadSource.startIndex, loadSource.startTime);
+      } else {
+         this._queue = null;
+         mediaInfo.entity = loadSource.entity;
+         mediaInfo.contentUrl = loadSource.src;
+         mediaInfo.contentType = loadSource.type;
+
+         mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+         mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+         mediaInfo.metadata.title = title;
+         mediaInfo.metadata.subtitle = subtitle;
+         mediaInfo.streamType = this.videojsPlayer.liveTracker && this.videojsPlayer.liveTracker.isLive()
+            ? chrome.cast.media.StreamType.LIVE
+            : chrome.cast.media.StreamType.BUFFERED;
+         mediaInfo.tracks = [];
+         mediaInfo.activeTrackIds = [];
+
+         for (i = 0; i < textTrackJsonTracks.length; i++) {
+            mediaInfo.tracks.push(this.generateTrack(textTrackJsonTracks[i], i));
+            if (textTrackJsonTracks[i].mode === 'showing') {
+               mediaInfo.activeTrackIds.push(i);
+            }
          }
+
+         if (customData) {
+            mediaInfo.customData = customData;
+         }
+         request = new chrome.cast.media.LoadRequest(mediaInfo);
       }
 
-      if (customData) {
-         mediaInfo.customData = customData;
-      }
-
-      this._ui.updateTitle(title);
-      this._ui.updateSubtitle(subtitle);
-
-      request = new chrome.cast.media.LoadRequest(mediaInfo);
       request.autoplay = true;
       request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
-
       if (loadSource.credentials) {
          request.credentials = loadSource.credentials;
          request.credentialsType = loadSource.credentialsType;
       }
-
       this._isMediaLoading = true;
       this._hasPlayedCurrentItem = false;
-      castSession.loadMedia(request)
-         .then(this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
+      this._ui.updateTitle(title);
+      this._ui.updateSubtitle(subtitle);
+      castSessionObj = castSession.getSessionObj();
+      castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
 
    /**
@@ -389,10 +417,15 @@ ChromecastTech = {
    ended: function() {
       var mediaSession = this._getMediaSession();
 
+      // Don't check for queues
+      // When handling a queue there are moments when mediaSession is null and current item has already finished
+      // and the new item is not started loading yet, which would end the session.
+      if (this._queue) {
+         return false;
+      }
       if (!mediaSession && this._hasMediaSessionEnded && !this._isMediaLoading) {
          return true;
       }
-
       return mediaSession ? (mediaSession.idleReason === chrome.cast.media.IdleReason.FINISHED) : false;
    },
 
@@ -614,6 +647,7 @@ ChromecastTech = {
    _listenToPlayerControllerEvents: function() {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
+
       this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
       this._addEventListener(this._remotePlayerController, eventTypes.VOLUME_LEVEL_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
@@ -641,6 +675,7 @@ ChromecastTech = {
          }
 
       });
+      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, this._handleMediaInfoChangeEvent, this);
    },
 
    /**
@@ -862,6 +897,13 @@ ChromecastTech = {
     */
    _triggerDurationChangeEvent: function() {
       this.trigger('durationchange');
+   },
+
+   /**
+    * @private
+    */
+   _handleMediaInfoChangeEvent: function(event) {
+      this._requestQueueItemChange(event);
    },
 
    /**
