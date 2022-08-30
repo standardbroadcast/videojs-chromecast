@@ -619,7 +619,7 @@ ChromecastTech = {
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
-      // If any subtitles were loaded on cast recier side,
+      // If any subtitles were loaded on cast receiver side,
       // check if they exist on web player side, if not add them
       this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, (event) => {
          this.videojsPlayer.remoteTextTracks();
