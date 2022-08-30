@@ -629,7 +629,7 @@ ChromecastTech = {
 
          if (event.value && event.value.tracks) {
             event.value.tracks.forEach(function(track) {
-               const isAlreadyLoaded = !!alreadyLoadedTracks.find(function(alreadyLoadedTrack) {
+               const isAlreadyLoaded = alreadyLoadedTracks.some(function(alreadyLoadedTrack) {
                   return alreadyLoadedTrack.id === track.name;
                });
 
