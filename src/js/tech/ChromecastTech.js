@@ -55,6 +55,7 @@ ChromecastTech = {
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
       this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
+      this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
 
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
@@ -302,6 +303,7 @@ ChromecastTech = {
       this._hasPlayedCurrentItem = false;
       this._ui.updateTitle(title);
       this._ui.updateSubtitle(subtitle);
+      request.customData = this._requestCustomData();
       castSessionObj = castSession.getSessionObj();
       castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
