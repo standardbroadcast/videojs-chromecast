@@ -295,6 +295,7 @@ ChromecastTech = {
 
       request.autoplay = true;
       request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
+      request.customData = this._requestCustomData();
       if (loadSource.credentials) {
          request.credentials = loadSource.credentials;
          request.credentialsType = loadSource.credentialsType;
@@ -303,7 +304,6 @@ ChromecastTech = {
       this._hasPlayedCurrentItem = false;
       this._ui.updateTitle(title);
       this._ui.updateSubtitle(subtitle);
-      request.customData = this._requestCustomData();
       castSessionObj = castSession.getSessionObj();
       castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
