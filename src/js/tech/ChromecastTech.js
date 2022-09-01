@@ -55,6 +55,7 @@ ChromecastTech = {
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
       this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
+      this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
 
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
@@ -294,6 +295,7 @@ ChromecastTech = {
 
       request.autoplay = true;
       request.currentTime = startTime === undefined ? loadSource.startTime : startTime;
+      request.customData = this._requestCustomData();
       if (loadSource.credentials) {
          request.credentials = loadSource.credentials;
          request.credentialsType = loadSource.credentialsType;
