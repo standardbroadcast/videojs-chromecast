@@ -905,7 +905,9 @@ ChromecastTech = {
     * @private
     */
    _handleMediaInfoChangeEvent: function(event) {
-      this._requestQueueItemChange(event);
+      if (event && event.value && event.value.entity) {
+         this._requestQueueItemChange(event.value.entity);
+      }
    },
 
    /**
