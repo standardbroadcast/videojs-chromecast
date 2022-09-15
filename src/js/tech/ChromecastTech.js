@@ -308,7 +308,6 @@ ChromecastTech = {
       this._ui.updateTitle(title);
       this._ui.updateSubtitle(subtitle);
       castSessionObj = castSession.getSessionObj();
-      console.log(castSessionObj, '123121231212312331233');
       castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
 
