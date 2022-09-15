@@ -157,6 +157,7 @@ player.chromecast(); // initializes the Chromecast plugin
      the last child of the control bar. A value less than 0 puts the button at the specified
      position from the end of the control bar. Note that it's likely not all child components
      of the control bar are visible.
+   * **`plugins.chromecast.credentials`** - string with credentials identyfing the user.
 
 ##### Chromecast Tech configuration
 
@@ -177,6 +178,9 @@ player.chromecast(); // initializes the Chromecast plugin
      If nothing is returned or if this option is not defined, no custom data will be sent.
      This option is intended to be used with a [custom receiver][custom-receiver] application
      to extend its default capabilities.
+   * **`chromecast.requestQueueItemChangeFn`** - a function that this plugin calls, when `MEDIA_INFO_CHANGED` event is triggered, it passes `MediaInfoItem` as a parameter, from this event `event.value.entity` can be extracted to check what is the next item that should be played.
+   * **`chromecast.onChangeSubtitleTrackFn`** - a function that this plugin calls, when a caption was changed by Chromecast device it passes an object {name: string} containing the name of the subtitle, or it passes `null` when captions were turned off.
+
 
 Here is an example configuration object that makes full use of all required and optional
 configuration:
@@ -212,12 +216,25 @@ options = {
       },
       requestCustomDataFn: function(source) { // Not required
          return customData[source.url];
-      }
+      },
+      requestSubtitleFn: function( track ) { // Not required
+         if( track ) {
+         changeSubtitleTrack( track.name )
+         } else {
+         changeSubtitleTrack( 'off' )
+         }
+      },
+      requestQueueItemChangeFn: function( event ) { // Not required
+         if( event.value ) {
+            playNextItemFromQueue( event.value.entitiy )
+         }
+      },
    },
    plugins: {
       chromecast: {
          receiverAppID: '1234' // Not required
          addButtonToControlBar: false, // Defaults to true
+         credentials: 'token' // not required
       },
    }
 };
