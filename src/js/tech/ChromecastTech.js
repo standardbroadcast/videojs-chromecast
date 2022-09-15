@@ -658,11 +658,11 @@ ChromecastTech = {
 
             const tracks = this._getMediaSession().media.tracks;
 
-            const label = tracks[id].name;
+            const name = tracks[id].name;
 
-            this._onChangeSubtitleTrack(label);
+            this._onChangeSubtitleTrack({ name });
          } else {
-            this._onChangeSubtitleTrack('off');
+            this._onChangeSubtitleTrack(null);
          }
       }, this);
       this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
