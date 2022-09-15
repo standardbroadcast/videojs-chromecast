@@ -51,6 +51,7 @@ ChromecastTech = {
       this.on('dispose', this._onDispose.bind(this));
 
       this._hasPlayedAnyItem = false;
+      this._onChangeSubtitleTrack = options.onChangeSubtitleTrackFn || function() { /* noop */ };
       this._requestTitle = options.requestTitleFn || function() { /* noop */ };
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
@@ -651,7 +652,10 @@ ChromecastTech = {
    _listenToPlayerControllerEvents: function() {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
+      this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, () => {
 
+         this._onChangeSubtitleTrack(this._getMediaSession().activeTrackIds);
+      }, this);
       this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
       this._addEventListener(this._remotePlayerController, eventTypes.VOLUME_LEVEL_CHANGED, this._triggerVolumeChangeEvent, this);
       this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
