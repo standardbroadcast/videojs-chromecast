@@ -308,6 +308,7 @@ ChromecastTech = {
       this._ui.updateTitle(title);
       this._ui.updateSubtitle(subtitle);
       castSessionObj = castSession.getSessionObj();
+      console.log(castSessionObj, '123121231212312331233');
       castSessionObj.loadMedia(request, this.onLoadSessionSuccess.bind(this), this._triggerErrorEvent.bind(this));
    },
 
@@ -653,8 +654,17 @@ ChromecastTech = {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
       this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, () => {
+         if (typeof this._getMediaSession().activeTrackIds[0] === 'number') {
+            const id = this._getMediaSession().activeTrackIds[0];
 
-         this._onChangeSubtitleTrack(this._getMediaSession().activeTrackIds);
+            const tracks = this._getMediaSession().media.tracks;
+
+            const label = tracks[id].name;
+
+            this._onChangeSubtitleTrack(label);
+         } else {
+            this._onChangeSubtitleTrack('off');
+         }
       }, this);
       this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
       this._addEventListener(this._remotePlayerController, eventTypes.VOLUME_LEVEL_CHANGED, this._triggerVolumeChangeEvent, this);
