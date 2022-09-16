@@ -219,14 +219,14 @@ options = {
       },
       requestSubtitleFn: function( track ) { // Not required
          if( track ) {
-         changeSubtitleTrack( track.name )
+            changeSubtitleTrack( track.name )
          } else {
-         changeSubtitleTrack( 'off' )
+            changeSubtitleTrack( 'off' )
          }
       },
       requestQueueItemChangeFn: function( event ) { // Not required
          if( event.value ) {
-            playNextItemFromQueue( event.value.entitiy )
+            playNextItemFromQueue( event.value.entity )
          }
       },
    },
