@@ -205,38 +205,43 @@ customData = {
 
 options = {
    // Must specify the 'chromecast' Tech first
-   techOrder: [ 'chromecast', 'html5' ], // Required
+   techOrder: ['chromecast', 'html5'], // Required
    // Configuration for the Chromecast Tech
    chromecast: {
-      requestTitleFn: function(source) { // Not required
+      requestTitleFn: function (source) {
+         // Not required
          return titles[source.url];
       },
-      requestSubtitleFn: function(source) { // Not required
+      requestSubtitleFn: function (source) {
+         // Not required
          return subtitles[source.url];
       },
-      requestCustomDataFn: function(source) { // Not required
+      requestCustomDataFn: function (source) {
+         // Not required
          return customData[source.url];
       },
-      requestSubtitleFn: function( track ) { // Not required
-         if( track ) {
-            changeSubtitleTrack( track.name )
+      requestSubtitleFn: function (track) {
+         // Not required
+         if (track) {
+            changeSubtitleTrack(track.name);
          } else {
-            changeSubtitleTrack( 'off' )
+            changeSubtitleTrack('off');
          }
       },
-      requestQueueItemChangeFn: function( event ) { // Not required
-         if( event.value ) {
-            playNextItemFromQueue( event.value.entity )
+      requestQueueItemChangeFn: function (event) {
+         // Not required
+         if (event.value) {
+            playNextItemFromQueue(event.value.entity);
          }
       },
    },
    plugins: {
       chromecast: {
-         receiverAppID: '1234' // Not required
+         receiverAppID: '1234', // Not required
          addButtonToControlBar: false, // Defaults to true
-         credentials: 'token' // not required
+         credentials: 'token', // not required
       },
-   }
+   },
 };
 ```
 
