@@ -1,4 +1,3 @@
-console.log('zupa');
 var ChromecastSessionManager = require('../chromecast/ChromecastSessionManager'),
     ChromecastTechUI = require('./ChromecastTechUI'),
     SESSION_TIMEOUT = 10 * 1000, // milliseconds
