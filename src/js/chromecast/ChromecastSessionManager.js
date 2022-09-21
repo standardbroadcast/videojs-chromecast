@@ -207,7 +207,7 @@ class ChromecastSessionManager {
       var player = this.player,
           currentTime = sessionCurrentTime || player.currentTime(),
           wasPlaying = sessionPlaying || !player.paused(),
-          sources = this._playerSrc || player.lastSource_.player;
+          sources = this._playerSrc || player.currentSources();
 
 
       // Reload the current source(s) to re-lookup and use the currently available Tech.
