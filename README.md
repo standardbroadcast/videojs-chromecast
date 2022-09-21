@@ -180,6 +180,7 @@ player.chromecast(); // initializes the Chromecast plugin
      to extend its default capabilities.
    * **`chromecast.requestQueueItemChangeFn`** - a function that this plugin calls, when `MEDIA_INFO_CHANGED` event is triggered, it passes `MediaInfoItem` as a parameter, from this event `event.value.entity` can be extracted to check what is the next item that should be played.
    * **`chromecast.onChangeSubtitleTrackFn`** - a function that this plugin calls, when a caption was changed by Chromecast device it passes an object {name: string} containing the name of the subtitle, or it passes `null` when captions were turned off.
+   * **`chromecast.playerSrc`** - a source to which player will be set after chromecast is disconnected. ( optional )
 
 
 Here is an example configuration object that makes full use of all required and optional
@@ -235,6 +236,7 @@ options = {
          }
       },
    },
+   playerSrc: 'https://mystorage.com/myVideo.mp4', // Not required
    plugins: {
       chromecast: {
          receiverAppID: '1234', // Not required
