@@ -653,7 +653,7 @@ ChromecastTech = {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
       this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, () => {
-         if (typeof this._getMediaSession()?.activeTrackIds[0] === 'number') {
+         if (typeof this._getMediaSession() && this._getMediaSession().activeTrackIds[0] === 'number') {
             const id = this._getMediaSession().activeTrackIds[0];
 
             const tracks = this._getMediaSession().media.tracks;
