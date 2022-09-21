@@ -57,7 +57,7 @@ ChromecastTech = {
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
       this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
-
+      this.videojsPlayer.chromecastSessionManager._playerSrc = options.playerSrc;
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
       };
@@ -653,7 +653,7 @@ ChromecastTech = {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
       this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, () => {
-         if (typeof this._getMediaSession().activeTrackIds[0] === 'number') {
+         if (this._getMediaSession() && typeof  this._getMediaSession().activeTrackIds[0] === 'number') {
             const id = this._getMediaSession().activeTrackIds[0];
 
             const tracks = this._getMediaSession().media.tracks;
