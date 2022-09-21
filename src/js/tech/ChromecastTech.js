@@ -54,10 +54,9 @@ ChromecastTech = {
       this._onChangeSubtitleTrack = options.onChangeSubtitleTrackFn || function() { /* noop */ };
       this._requestTitle = options.requestTitleFn || function() { /* noop */ };
       this._requestSubtitle = options.requestSubtitleFn || function() { /* noop */ };
-      this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
       this._requestQueueItemChange = options.requestQueueItemChangeFn || function() { /* noop */ };
       this._requestCustomData = options.requestCustomDataFn || function() { /* noop */ };
-
+      this._modifyLoadRequestFn = options.modifyLoadRequestFn || function() { /* noop */ };
       this._requestLoadSource = options.requestLoadSourceFn || function(source) {
          return source;
       };
@@ -65,6 +64,9 @@ ChromecastTech = {
 
       // See `currentTime` function
       this._initialStartTime = options.startTime === undefined ? (loadSource.startTime || 0) : options.startTime;
+      this._isScrubbing = false;
+      this._isSeeking = false;
+      this._scrubbingTime = this._initialStartTime;
 
       mediaSession = this._getMediaSession();
       if (mediaSession && mediaSession.media && mediaSession.media.entity === loadSource.entity) {
@@ -302,6 +304,7 @@ ChromecastTech = {
 
          request = { ...request, ...credentialsData };
       }
+      request = this._modifyLoadRequestFn(request);
 
       this._isMediaLoading = true;
       this._hasPlayedCurrentItem = false;
@@ -357,17 +360,48 @@ ChromecastTech = {
     * @see {@link http://docs.videojs.com/Tech.html#setCurrentTime}
     */
    setCurrentTime: function(time) {
-      var duration = this.duration();
+      if (this.scrubbing()) {
+         this._scrubbingTime = time;
+         return false;
+      }
+      const duration = this.duration();
 
       if (time > duration || !this._remotePlayer.canSeek) {
          return;
       }
-      // Seeking to any place within (approximately) 1 second of the end of the item
-      // causes the Video.js player to get stuck in a BUFFERING state. To work around
-      // this, we only allow seeking to within 1 second of the end of an item.
-      this._remotePlayer.currentTime = Math.min(duration - 1, time);
-      this._remotePlayerController.seek();
+
+      // We need to delay the actual seeking, because when you
+      // scrub, videojs does pause() -> setCurrentTime() -> play()
+      // and that triggers a weird bug where the chromecast stops sending
+      // time_changed events.
+      this._isSeeking = true;
+      setTimeout(() => {
+         // Seeking to any place within (approximately) 1 second of the end of the item
+         // causes the Video.js player to get stuck in a BUFFERING state. To work around
+         // this, we only allow seeking to within 1 second of the end of an item.
+         this._remotePlayer.currentTime = Math.min(duration - 1, time);
+         this._remotePlayerController.seek();
+         this._isSeeking = false;
+      }, 500);
       this._triggerTimeUpdateEvent();
+   },
+
+   seeking: function() {
+      return this._isSeeking;
+   },
+
+   scrubbing: function() {
+      return this._isScrubbing;
+   },
+
+   setScrubbing: function(newValue) {
+      if (newValue === true) {
+         this._scrubbingTime = this.currentTime();
+         this._isScrubbing = true;
+      } else {
+         this._isScrubbing = false;
+         this.setCurrentTime(this._scrubbingTime);
+      }
    },
 
    /**
@@ -386,6 +420,9 @@ ChromecastTech = {
       // chromecast plays its first item.
       if (!this._hasPlayedAnyItem) {
          return this._initialStartTime;
+      }
+      if (this.scrubbing() || this.seeking()) {
+         return this._scrubbingTime;
       }
       return this._remotePlayer.currentTime;
    },
