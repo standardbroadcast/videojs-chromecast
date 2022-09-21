@@ -681,11 +681,17 @@ ChromecastTech = {
          if (event.value && event.value.tracks) {
             event.value.tracks.forEach(function(track) {
                const isAlreadyLoaded = alreadyLoadedTracks.some(function(alreadyLoadedTrack) {
-                  return alreadyLoadedTrack.id === track.name;
+                  return alreadyLoadedTrack.id === track.name || alreadyLoadedTrack.language === track.language;
                });
 
-               if (!isAlreadyLoaded) {
-                  track.id = track.name;
+               if (!isAlreadyLoaded && track.type === 'TEXT' && track.subtype === 'SUBTITLE') {
+                  if (track.name) {
+                     track.id = track.name;
+                  } else if (track.language === 'en') {
+                     track.id = 'English';
+                  } else {
+                     track.id = track.language;
+                  }
                   player.addRemoteTextTrack(track);
                }
             });
