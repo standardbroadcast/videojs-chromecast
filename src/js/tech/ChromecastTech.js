@@ -653,7 +653,7 @@ ChromecastTech = {
       var eventTypes = cast.framework.RemotePlayerEventType;
 
       this._addEventListener(this._remotePlayerController, eventTypes.MEDIA_INFO_CHANGED, () => {
-         if (this._getMediaSession() && typeof  this._getMediaSession().activeTrackIds[0] === 'number') {
+         if (this._getMediaSession() && typeof this._getMediaSession().activeTrackIds[0] === 'number') {
             const id = this._getMediaSession().activeTrackIds[0];
 
             const tracks = this._getMediaSession().media.tracks;
@@ -684,7 +684,7 @@ ChromecastTech = {
                   return alreadyLoadedTrack.id === track.name || alreadyLoadedTrack.language === track.language;
                });
 
-               if (!isAlreadyLoaded && track.type === 'TEXT' && track.subtype === 'SUBTITLE') {
+               if (!isAlreadyLoaded && track.type === 'TEXT' && track.subtype === 'SUBTITLES') {
                   if (track.name) {
                      track.id = track.name;
                   } else if (track.language === 'en') {
