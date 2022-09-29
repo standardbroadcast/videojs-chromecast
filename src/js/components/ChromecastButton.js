@@ -54,7 +54,9 @@ ChromecastButton = {
    buildCSSClass: function(isChromecastConnected) {
       // cast.framework.CastContext.getInstance().getCastState() returns `CONNECTED` later then `_onChromecastConnected` event is triggered
       // for that reason we need additional `isChomecastConnected` flag to determine if build was triggered by onChromecastConnected or onChromecastDisconnected events
-      return 'vjs-chromecast-button ' + (((cast.framework.CastContext.getInstance().getCastState() === 'CONNECTED') || isChromecastConnected) ? 'vjs-chromecast-casting-state ' : '') +
+      isChromecastConnected = typeof isChromecastConnected === 'boolean' ? isChromecastConnected : cast.framework.CastContext.getInstance().getCastState() === 'CONNECTED')
+
+      return 'vjs-chromecast-button ' + (( isChromecastConnected) ? 'vjs-chromecast-casting-state ' : '') +
          this.constructor.super_.prototype.buildCSSClass();
    },
 
