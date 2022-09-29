@@ -52,7 +52,7 @@ ChromecastButton = {
     * @see {@link http://docs.videojs.com/Button.html#buildCSSClass|Button#buildCSSClass}
     */
    buildCSSClass: function() {
-      return 'vjs-chromecast-button ' + (this._isChromecastConnected ? 'vjs-chromecast-casting-state ' : '') +
+      return 'vjs-chromecast-button ' + ((cast.framework.CastContext.getInstance().getCastState() === 'CONNECTED') ? 'vjs-chromecast-casting-state ' : '') +
          this.constructor.super_.prototype.buildCSSClass();
    },
 
