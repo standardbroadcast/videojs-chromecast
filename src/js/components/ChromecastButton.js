@@ -75,7 +75,6 @@ ChromecastButton = {
     * @private
     */
    _onChromecastConnected: function() {
-      this._isChromecastConnected = true;
       this._reloadCSSClasses();
    },
 
@@ -85,7 +84,6 @@ ChromecastButton = {
     * @private
     */
    _onChromecastDisconnected: function() {
-      this._isChromecastConnected = false;
       this._reloadCSSClasses();
    },
 
