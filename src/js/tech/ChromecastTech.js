@@ -18,7 +18,7 @@ var ChromecastSessionManager = require("../chromecast/ChromecastSessionManager")
 module.exports = function(videojs) {
    var Tech = videojs.getComponent('Tech'),
        SESSION_TIMEOUT = 10 * 1000; // milliseconds
- 
+
    /**
     * @module ChomecastTech
     */
@@ -495,7 +495,7 @@ module.exports = function(videojs) {
       this._remotePlayer.currentTime = Math.min(duration - 1, time);
       this._remotePlayerController.seek();
       this._isSeeking = false;
-   } 500);
+   }, 500);
     this._triggerTimeUpdateEvent();
   }
 
